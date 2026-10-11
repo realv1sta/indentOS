@@ -7,7 +7,7 @@ HOST=""
 ROOT=""
 DE=""
 BOOTMODE_CHOICE=""
-LOGFILE="/tmp/identos_install.log"
+LOGFILE="/tmp/indentos_install.log"
 
 check_mount() {
     mountpoint -q /mnt
@@ -234,7 +234,7 @@ while true; do
         fi
 
         if [ "$BOOT_MODE" == "uefi" ] && [ "$EFIVARS_PRESENT" != "true" ]; then
-            dialog --title "Warning: No EFI Variables" --yesno "You're installing for UEFI, but this live session doesn't have EFI variables available.\n\nGrub can still be installed, but no dedicated 'identOS' entry can be registered in your firmware's boot menu - most firmwares will still boot it as the fallback, but not all.\n\nFor a proper boot entry, reboot the install media in UEFI mode instead.\n\nContinue anyway?" 0 0
+            dialog --title "Warning: No EFI Variables" --yesno "You're installing for UEFI, but this live session doesn't have EFI variables available.\n\nGrub can still be installed, but no dedicated 'indentOS' entry can be registered in your firmware's boot menu - most firmwares will still boot it as the fallback, but not all.\n\nFor a proper boot entry, reboot the install media in UEFI mode instead.\n\nContinue anyway?" 0 0
             if [ $? -ne 0 ]; then
                 clear
                 continue
@@ -242,7 +242,7 @@ while true; do
             clear
         fi
 
-        dialog --title "Warning!" --yesno "If you click confirm, identOS will install on your disk/partition at /mnt. THIS ACTION CANNOT BE REVERSED!\n\nSO do it at your own risk!!" 0 0
+        dialog --title "Warning!" --yesno "If you click confirm, indentOS will install on your disk/partition at /mnt. THIS ACTION CANNOT BE REVERSED!\n\nSO do it at your own risk!!" 0 0
 
         STATUS=$?
         clear
@@ -311,9 +311,9 @@ HOSTSEOF
 mkinitcpio -P
 
 cat <<OSSEOF > /etc/os-release
-NAME="identOS"
-PRETTY_NAME="identOS"
-ID=identos
+NAME="indentOS"
+PRETTY_NAME="indentOS"
+ID=indentos
 BUILD_ID=rolling
 ANSI_COLOR="38;2;85;255;85"
 HOME_URL="https://github.com/realv1sta/indentOS"
@@ -339,14 +339,14 @@ else
     echo "WARNING: could not clone beamyyl/kitty, /etc/skel/.config/kitty not seeded" >&2
 fi
 
-if git clone https://github.com/realv1sta/indentOS /tmp/identos-assets; then
-    if [ -f /tmp/identos-assets/colorlogo.sh ]; then
-        chmod +x /tmp/identos-assets/colorlogo.sh
-        (cd /tmp/identos-assets && ./colorlogo.sh > /etc/skel/.config/fastfetch/logo.txt) || echo "WARNING: colorlogo.sh failed, keeping empty logo.txt" >&2
+if git clone https://github.com/realv1sta/indentOS /tmp/indentos-assets; then
+    if [ -f /tmp/indentos-assets/colorlogo.sh ]; then
+        chmod +x /tmp/indentos-assets/colorlogo.sh
+        (cd /tmp/indentos-assets && ./colorlogo.sh > /etc/skel/.config/fastfetch/logo.txt) || echo "WARNING: colorlogo.sh failed, keeping empty logo.txt" >&2
     else
         echo "WARNING: colorlogo.sh not found in indentOS repo, keeping logo.txt empty" >&2
     fi
-    rm -rf /tmp/identos-assets
+    rm -rf /tmp/indentos-assets
 else
     echo "WARNING: could not clone indentOS repo, logo not installed" >&2
 fi
@@ -359,17 +359,17 @@ sed -i 's/^# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL:ALL) ALL/' /etc/sudoers
 if [ "$BOOT_MODE" = "uefi" ]; then
     pacman -S --noconfirm --overwrite="*" grub efibootmgr os-prober
     if [ "$UEFI_NVRAM_OK" = "true" ]; then
-        grub-install --target=x86_64-efi --efi-directory="$EFI_DIR" --bootloader-id=identOS
+        grub-install --target=x86_64-efi --efi-directory="$EFI_DIR" --bootloader-id=indentOS
         if [ \$? -ne 0 ]; then
             echo "WARNING: grub-install with NVRAM registration failed, retrying with --removable (no firmware boot entry will be created)." >&2
-            grub-install --target=x86_64-efi --efi-directory="$EFI_DIR" --bootloader-id=identOS --removable
+            grub-install --target=x86_64-efi --efi-directory="$EFI_DIR" --bootloader-id=indentOS --removable
             if [ \$? -ne 0 ]; then
                 echo "FATAL: UEFI grub-install failed even with --removable. Check that $EFI_DIR is your mounted ESP (vfat filesystem, esp/boot partition flag set)." >&2
                 exit 1
             fi
         fi
     else
-        grub-install --target=x86_64-efi --efi-directory="$EFI_DIR" --bootloader-id=identOS --removable
+        grub-install --target=x86_64-efi --efi-directory="$EFI_DIR" --bootloader-id=indentOS --removable
         if [ \$? -ne 0 ]; then
             echo "FATAL: UEFI grub-install failed. Check that $EFI_DIR is your mounted ESP (vfat filesystem, esp/boot partition flag set)." >&2
             exit 1
@@ -377,8 +377,8 @@ if [ "$BOOT_MODE" = "uefi" ]; then
     fi
 
     mkdir -p "$EFI_DIR/EFI/BOOT"
-    if [ -f "$EFI_DIR/EFI/identOS/grubx64.efi" ]; then
-        cp -f "$EFI_DIR/EFI/identOS/grubx64.efi" "$EFI_DIR/EFI/BOOT/BOOTX64.EFI" || true
+    if [ -f "$EFI_DIR/EFI/indentOS/grubx64.efi" ]; then
+        cp -f "$EFI_DIR/EFI/indentOS/grubx64.efi" "$EFI_DIR/EFI/BOOT/BOOTX64.EFI" || true
     fi
 else
     if [ -z "$GRUB_DISK" ]; then
@@ -393,7 +393,7 @@ else
     fi
 fi
 
-sed -i 's/^#*GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR="identOS"/' /etc/default/grub || echo 'GRUB_DISTRIBUTOR="identOS"' >> /etc/default/grub
+sed -i 's/^#*GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR="indentOS"/' /etc/default/grub || echo 'GRUB_DISTRIBUTOR="indentOS"' >> /etc/default/grub
 sed -i 's/^#*GRUB_DISABLE_OS_PROBER=.*/GRUB_DISABLE_OS_PROBER=false/' /etc/default/grub || echo 'GRUB_DISABLE_OS_PROBER=false' >> /etc/default/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 
@@ -410,7 +410,7 @@ EOF
             fi
 
             if [ "$INSTALL_OK" == "true" ]; then
-                dialog --title "All done!" --msgbox "Installation complete! Reboot into identOS." 0 0; clear
+                dialog --title "All done!" --msgbox "Installation complete! Reboot into indentOS." 0 0; clear
                 break
             else
                 show_error_log
