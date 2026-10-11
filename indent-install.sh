@@ -316,14 +316,11 @@ PRETTY_NAME="identOS"
 ID=identos
 BUILD_ID=rolling
 ANSI_COLOR="38;2;85;255;85"
-HOME_URL="https://github.com/realv1sta/visnux"
-DOCUMENTATION_URL="https://github.com/realv1sta/visnux"
-LOGO=identos
+HOME_URL="https://github.com/realv1sta/indentOS"
+DOCUMENTATION_URL="https://github.com/realv1sta/indentOS"
 OSSEOF
 
 mkdir -p /etc/skel/.config
-mkdir -p /usr/share/icons/hicolor/scalable/apps
-mkdir -p /usr/share/pixmaps
 
 pacman -S --noconfirm --overwrite="*" git || true
 
@@ -342,18 +339,16 @@ else
     echo "WARNING: could not clone beamyyl/kitty, /etc/skel/.config/kitty not seeded" >&2
 fi
 
-if git clone https://github.com/realv1sta/visnux.git /tmp/identos-assets; then
-    [ -f /tmp/identos-assets/visnux.svg ] && cp /tmp/identos-assets/visnux.svg /usr/share/icons/hicolor/scalable/apps/identos.svg
-    [ -f /tmp/identos-assets/visnux.png ] && cp /tmp/identos-assets/visnux.png /usr/share/pixmaps/identos.png
+if git clone https://github.com/realv1sta/indentOS /tmp/identos-assets; then
     if [ -f /tmp/identos-assets/colorlogo.sh ]; then
         chmod +x /tmp/identos-assets/colorlogo.sh
         (cd /tmp/identos-assets && ./colorlogo.sh > /etc/skel/.config/fastfetch/logo.txt) || echo "WARNING: colorlogo.sh failed, keeping empty logo.txt" >&2
     else
-        echo "WARNING: colorlogo.sh not found in asset repo, keeping logo.txt empty" >&2
+        echo "WARNING: colorlogo.sh not found in indentOS repo, keeping logo.txt empty" >&2
     fi
     rm -rf /tmp/identos-assets
 else
-    echo "WARNING: could not clone asset repo, icons/logo not installed" >&2
+    echo "WARNING: could not clone indentOS repo, logo not installed" >&2
 fi
 
 echo "root:$ROOT" | chpasswd
